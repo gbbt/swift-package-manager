@@ -1784,13 +1784,13 @@ class PIFBuilderTests: XCTestCase {
                     targets: [
                         .init(name: "foo", resources: [
                             // This is intentionally specific to test that we pick up `.xcdatamodel` implicitly.
-                            .init(rule: .process, path: "Resources/Data.plist")
+                            .init(rule: .process(localization: .none), path: "Resources/Data.plist")
                         ]),
                         .init(name: "FooLib", resources: [
-                            .init(rule: .process, path: "Resources")
+                            .init(rule: .process(localization: .none), path: "Resources")
                         ]),
                         .init(name: "FooTests", resources: [
-                            .init(rule: .process, path: "Resources")
+                            .init(rule: .process(localization: .none), path: "Resources")
                         ], type: .test),
                     ]),
             ],
@@ -2001,64 +2001,52 @@ class PIFBuilderTests: XCTestCase {
                         .init(name: "foo", settings: [
                             .init(
                                 tool: .c,
-                                name: .define,
-                                value: ["ENABLE_BEST_MODE"]),
+                                kind: .define("ENABLE_BEST_MODE")),
                             .init(
                                 tool: .cxx,
-                                name: .headerSearchPath,
-                                value: ["some/path"],
+                                kind: .headerSearchPath("some/path"),
                                 condition: .init(platformNames: ["macos"])),
                             .init(
                                 tool: .linker,
-                                name: .linkedLibrary,
-                                value: ["z"],
+                                kind: .linkedLibrary("z"),
                                 condition: .init(config: "debug")),
                             .init(
                                 tool: .swift,
-                                name: .unsafeFlags,
-                                value: ["-secret", "value"],
+                                kind: .unsafeFlags(["-secret", "value"]),
                                 condition: .init(platformNames: ["macos", "linux"], config: "release")),
                         ]),
                         .init(name: "FooLib", settings: [
                             .init(
                                 tool: .c,
-                                name: .define,
-                                value: ["ENABLE_BEST_MODE"]),
+                                kind: .define("ENABLE_BEST_MODE")),
                             .init(
                                 tool: .cxx,
-                                name: .headerSearchPath,
-                                value: ["some/path"],
+                                kind: .headerSearchPath("some/path"),
                                 condition: .init(platformNames: ["macos"])),
                             .init(
                                 tool: .linker,
-                                name: .linkedLibrary,
-                                value: ["z"],
+                                kind: .linkedLibrary("z"),
                                 condition: .init(config: "debug")),
                             .init(
                                 tool: .swift,
-                                name: .unsafeFlags,
-                                value: ["-secret", "value"],
+                                kind: .unsafeFlags(["-secret", "value"]),
                                 condition: .init(platformNames: ["macos", "linux"], config: "release")),
                         ]),
                         .init(name: "FooTests", type: .test, settings: [
                             .init(
                                 tool: .c,
-                                name: .define,
-                                value: ["ENABLE_BEST_MODE"]),
+                                kind: .define("ENABLE_BEST_MODE")),
                             .init(
                                 tool: .cxx,
-                                name: .headerSearchPath,
-                                value: ["some/path"],
+                                kind: .headerSearchPath("some/path"),
                                 condition: .init(platformNames: ["macos"])),
                             .init(
                                 tool: .linker,
-                                name: .linkedLibrary,
-                                value: ["z"],
+                                kind: .linkedLibrary("z"),
                                 condition: .init(config: "debug")),
                             .init(
                                 tool: .swift,
-                                name: .unsafeFlags,
-                                value: ["-secret", "value"],
+                                kind: .unsafeFlags(["-secret", "value"]),
                                 condition: .init(platformNames: ["macos", "linux"], config: "release")),
                         ]),
                     ]),
@@ -2346,8 +2334,7 @@ class PIFBuilderTests: XCTestCase {
                         .init(name: "MyLib", settings: [
                             .init(
                                 tool: .swift,
-                                name: .unsafeFlags,
-                                value: ["-enable-library-evolution"],
+                                kind: .unsafeFlags(["-enable-library-evolution"]),
                                 condition: .init(config: "release")),
                         ]),
                     ]),

@@ -4147,7 +4147,12 @@ final class WorkspaceTests: XCTestCase {
         try testWithTemporaryDirectory { path in
             // Create a temporary package as a test case.
             let packagePath = path.appending(component: "MyPkg")
-            let initPackage = try InitPackage(name: packagePath.basename, destinationPath: packagePath, packageType: .executable)
+            let initPackage = try InitPackage(
+                name: packagePath.basename,
+                packageType: .executable,
+                destinationPath: packagePath,
+                fileSystem: localFileSystem
+            )
             try initPackage.writePackageStructure()
 
             // Load the workspace.
@@ -4385,7 +4390,7 @@ final class WorkspaceTests: XCTestCase {
                 MockPackage(
                     name: "Bar",
                     targets: [
-                        MockTarget(name: "Bar", settings: [.init(tool: .swift, name: .unsafeFlags, value: ["-F", "/tmp"])]),
+                        MockTarget(name: "Bar", settings: [.init(tool: .swift, kind: .unsafeFlags(["-F", "/tmp"]))]),
                     ],
                     products: [
                         MockProduct(name: "Bar", targets: ["Bar"]),
@@ -4408,7 +4413,7 @@ final class WorkspaceTests: XCTestCase {
                 MockPackage(
                     name: "Bar",
                     targets: [
-                        MockTarget(name: "Bar", settings: [.init(tool: .swift, name: .unsafeFlags, value: ["-F", "/tmp"])]),
+                        MockTarget(name: "Bar", settings: [.init(tool: .swift, kind: .unsafeFlags(["-F", "/tmp"]))]),
                     ],
                     products: [
                         MockProduct(name: "Bar", targets: ["Bar"]),
@@ -4418,7 +4423,7 @@ final class WorkspaceTests: XCTestCase {
                 MockPackage(
                     name: "Baz",
                     targets: [
-                        MockTarget(name: "Baz", dependencies: ["Bar"], settings: [.init(tool: .swift, name: .unsafeFlags, value: ["-F", "/tmp"])]),
+                        MockTarget(name: "Baz", dependencies: ["Bar"], settings: [.init(tool: .swift, kind: .unsafeFlags(["-F", "/tmp"]))]),
                     ],
                     products: [
                         MockProduct(name: "Baz", targets: ["Baz"]),
